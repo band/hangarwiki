@@ -29,7 +29,7 @@ Identity is built on public-key cryptography — simple enough for non-technical
 - Page history (git log per file)
 - Magic-link email authentication
 - Keypair generation on signup (stored server-side, exportable)
-- Basic access control: public-read or private wiki, authenticated editing
+- Basic access control: public-read or private wiki, invitation-gated editing
 - Git clone/push support for power users (via keypair)
 - SQLite for user/session/wiki metadata
 - Forgejo API integration for repo lifecycle
@@ -163,7 +163,7 @@ wiki-name/
 ## Access Control
 
 ### Wiki-Level Permissions
-- **Public wiki**: Anyone can read, authenticated users can edit
+- **Public wiki**: Anyone can read, invited members can edit
 - **Private wiki**: Only members can read and edit
 - **Roles**: Owner (full control), Editor (read + write), Viewer (read only)
 
