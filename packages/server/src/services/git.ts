@@ -47,7 +47,8 @@ export class GitService {
 
   /** Initialize a new git repo at the configured directory. */
   async init(): Promise<void> {
-    await exec('git', ['init', this.repoDir]);
+    // Specify 'main' to match push default
+    await exec('git', ['init', '-b', 'main', this.repoDir]);
   }
 
   /** Clone a remote repo into the configured directory. */
