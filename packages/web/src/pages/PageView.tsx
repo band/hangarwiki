@@ -97,14 +97,14 @@ export function PageView() {
 
   const mainContent = (
     <div className={sidebarHtml ? 'flex-1 min-w-0' : 'max-w-3xl mx-auto w-full'}>
-      <div className="flex items-center justify-between mb-6">
-        <div>
+      <div className="flex flex-col min-[440px]:flex-row min-[440px]:items-center min-[440px]:justify-between gap-3 mb-6">
+        <div className="min-w-0 flex-1">
           <Link to={`/${wikiSlug}`} className="text-sm text-gray-500 hover:text-gray-700">
             &larr; Back to wiki
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mt-1">{page.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 break-words">{page.title}</h1>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           {user && (
             <Link
               to={`/${wikiSlug}/${urlPath}/edit`}
@@ -152,10 +152,10 @@ export function PageView() {
 
   if (sidebarHtml) {
     return (
-      <div className="max-w-5xl mx-auto p-8 flex gap-8">
+      <div className="max-w-5xl mx-auto p-4 sm:p-8 flex flex-col sm:flex-row gap-4 sm:gap-8">
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
         <aside
-          className="w-56 flex-shrink-0 prose prose-sm prose-blue max-w-none"
+          className="w-full sm:w-56 sm:flex-shrink-0 prose prose-sm prose-blue max-w-none"
           dangerouslySetInnerHTML={{ __html: sidebarHtml }}
           onClick={handleContentClick}
         />
@@ -165,7 +165,7 @@ export function PageView() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-8">
+    <div className="max-w-3xl mx-auto p-4 sm:p-8">
       {mainContent}
     </div>
   );

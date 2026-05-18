@@ -1,5 +1,6 @@
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
@@ -129,6 +130,7 @@ export async function renderMarkdown(
 
   const processor = unified()
     .use(remarkParse)
+    .use(remarkGfm)
     .use(remarkFrontmatter, ['yaml'])
     .use(() => (tree: Root) => {
       // Extract frontmatter

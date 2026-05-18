@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prose overflow defensives — keep narrow viewports from forcing page-level zoom
+   when content contains long URLs, wide code blocks, or wide tables. */
+.prose pre { overflow-x: auto; max-width: 100%; }
+.prose a { overflow-wrap: anywhere; }
+.prose table { display: block; overflow-x: auto; max-width: 100%; }
+
 /* Wikilinks */
 .prose a.wikilink {
   text-decoration-color: currentColor;
