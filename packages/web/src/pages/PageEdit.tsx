@@ -10,11 +10,15 @@ export function PageEdit() {
   const navigate = useNavigate();
   const [content, setContent] = useState('');
   const [pagePath, setPagePath] = useState('');
+  const [pageTitle, setPageTitle] = useState('');
   const [preview, setPreview] = useState('');
   const [showPreview, setShowPreview] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [pageList, setPageList] = useState<PageInfo[]>([]);
+  const [showDangerZone, setShowDangerZone] = useState(false);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState('');
+  const [deleting, setDeleting] = useState(false);
   const isNew = !urlPath;
 
   // For new pages — pre-fill title from ?title= query param (incipient link click)
@@ -33,6 +37,7 @@ export function PageEdit() {
     pagesApi.get(wiki, cleanPath).then(({ page }) => {
       setContent(page.content);
       setPagePath(page.path);
+      setPageTitle(page.title);
     }).catch((err) => setError(err.message));
   }, [wiki, urlPath, isNew]);
 
@@ -59,6 +64,21 @@ export function PageEdit() {
       navigate(href);
     }
   }, [navigate]);
+
+  async function handleDelete() {
+    if (!wiki || !urlPath) return;
+    setDeleting(true);
+    setError('');
+
+    try {
+      const cleanPath = urlPath.replace(/\/edit$/, '');
+      await pagesApi.delete(wiki, cleanPath);
+      navigate(`/${wiki}`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Delete failed');
+      setDeleting(false);
+    }
+  }
 
   async function handleSave() {
     if (!wiki) return;
@@ -131,6 +151,59 @@ export function PageEdit() {
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-800 text-sm">
           {error}
+        </div>
+      )}
+
+      {!isNew && (
+        <div className="flex justify-end mb-2">
+          <button
+            type="button"
+            onClick={() => {
+              setShowDangerZone(!showDangerZone);
+              setDeleteConfirmInput('');
+            }}
+            className="text-xs text-gray-500 hover:text-red-600"
+          >
+            {showDangerZone ? '× Close delete panel' : 'Delete this page…'}
+          </button>
+        </div>
+      )}
+
+      {!isNew && showDangerZone && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg space-y-3">
+          <h2 className="text-sm font-semibold text-red-700">Danger Zone</h2>
+          <p className="text-sm text-red-800">
+            This will delete <code className="bg-red-100 px-1 rounded">{pageTitle}</code> and
+            commit the removal to the wiki's git history. The page text remains recoverable from
+            git, but links to this page will break until it's restored or replaced.
+          </p>
+          <p className="text-sm text-red-800 font-medium">
+            Type <code className="bg-red-100 px-1 rounded">{pageTitle}</code> to confirm:
+          </p>
+          <input
+            type="text"
+            value={deleteConfirmInput}
+            onChange={(e) => setDeleteConfirmInput(e.target.value)}
+            className="w-full px-3 py-2 border border-red-300 rounded-lg text-sm"
+            placeholder={pageTitle}
+          />
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleteConfirmInput !== pageTitle || deleting}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm font-medium"
+            >
+              {deleting ? 'Deleting...' : 'Permanently delete page'}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowDangerZone(false); setDeleteConfirmInput(''); }}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 
