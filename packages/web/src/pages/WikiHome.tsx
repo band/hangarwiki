@@ -68,7 +68,7 @@ export function WikiHome() {
 
   return (
     <div className="max-w-3xl mx-auto p-4 sm:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+      <div className="flex flex-col min-[440px]:flex-row min-[440px]:items-center min-[440px]:justify-between gap-3 mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 min-w-0 break-words">{wiki.title}</h1>
         <div className="flex gap-2 shrink-0">
           {user && (
