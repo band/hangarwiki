@@ -167,16 +167,18 @@ sudo systemctl enable --now forgejo
 
 ### 8. Create the Forgejo admin user and API token
 NOTE: create and save the admin user password; it is needed to create
-the Forgejo API token  
+the Forgejo API token in step 12. The filename is intentionally loud
+so that a future reader notices a plaintext password sitting on disk
+and moves it into a password manager.
 
 ```bash
-openssl rand -base64 24 > fjadmin.txt
-chmod 400 fjadmin.txt
-```  
+openssl rand -base64 24 | sudo tee /root/DANGER-forgejo-admin-password-move-to-password-manager.txt > /dev/null
+sudo chmod 400 /root/DANGER-forgejo-admin-password-move-to-password-manager.txt
+```
 
 ```bash
 # Create admin user (used by HangarWiki for repo management)
-pw=$(tr -d '\n' < fjadmin.txt)
+pw=$(sudo tr -d '\n' < /root/DANGER-forgejo-admin-password-move-to-password-manager.txt)
 sudo -u forgejo /usr/local/bin/forgejo admin user create \
   --config /etc/forgejo/app.ini \
   --username hangarwiki \
